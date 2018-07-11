@@ -4,6 +4,14 @@
 #
 # Copyright:: 2018, The Authors, All Rights Reserved.
 
+Chef::Log.info("Installing NFS packages")
+case node['platform_family']
+when 'redhat'
+  package 'nfs-utils'
+when 'debian'
+  package 'nfs-common'
+end
+
 Chef::Log.info("Installing EFS")
 efs_lwrp "install_efs" do
   mount_dir node[:efs][:mount_dir]

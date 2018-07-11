@@ -1,5 +1,5 @@
 action :create do
-  bash 'mount_efs'
+  bash 'mount_efs' do
     code <<-EOH
       sudo mkdir #{new_resource.mount_dir}
       sudo mount #{new_resource.mount_flags} #{new_resource.efs_dns}:/ #{new_resource.mount_dir}
