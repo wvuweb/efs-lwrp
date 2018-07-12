@@ -14,6 +14,8 @@ end
 
 Chef::Log.info("Installing EFS")
 efs_lwrp "install_efs" do
+  user node[:efs][:user]
+  group node[:efs][:group]
   mount_dir node[:efs][:mount_dir]
   mount_flags node[:efs][:mount_flags]
   efs_dns node[:efs][:efs_dns]

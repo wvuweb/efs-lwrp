@@ -1,4 +1,14 @@
 action :create do
+
+  directory "#{new_resource.mount_dir}" do
+    recursive new_resource.recursive
+    user new_resource.user
+    group new_resource.group
+    path "#{new_resource.shared_dir}"
+    action :create
+    only_if { !::File.directory?("#{new_resource.shared_dir}") }
+  end
+
   bash 'mount_efs' do
     code <<-EOH
       sudo mkdir #{new_resource.mount_dir}
@@ -19,7 +29,8 @@ def load_current_resource
 
   # A common step is to load the current_resource instance variables with what is established in new_resource
   # What is passed into new_resource in our recipes is not automatically passed into our current_resource.
-
+  @current_resource.user(@new_resource.user)
+  @current_resource.group(@new_resource.group)
   @current_resource.mount_dir(@new_resource.mount_dir)
   @current_resource.mount_flags(@new_resource.mount_flags)
   @current_resource.efs_dns(@new_resource.efs_dns)
