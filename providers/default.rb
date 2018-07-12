@@ -1,17 +1,16 @@
 action :create do
 
   directory "#{new_resource.mount_dir}" do
-    recursive new_resource.recursive
+    recursive true
     user new_resource.user
     group new_resource.group
-    path "#{new_resource.shared_dir}"
+    path "#{new_resource.mount_dir}"
     action :create
-    only_if { !::File.directory?("#{new_resource.shared_dir}") }
+    only_if { !::File.directory?("#{new_resource.mount_dir}") }
   end
 
   bash 'mount_efs' do
     code <<-EOH
-      sudo mkdir #{new_resource.mount_dir}
       sudo mount #{new_resource.mount_flags} #{new_resource.efs_dns}:/ #{new_resource.mount_dir}
     EOH
   end
