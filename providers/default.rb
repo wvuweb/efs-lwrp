@@ -11,7 +11,11 @@ action :create do
 
   bash 'mount_efs' do
     code <<-EOH
-      sudo mount #{new_resource.mount_flags} #{new_resource.efs_dns}:/ #{new_resource.mount_dir}
+      if mountpoint -q #{new_resource.mount_dir}; then
+        echo "EFS already mounted to #{new_resource.mount_dir}"
+      else
+        sudo mount #{new_resource.mount_flags} #{new_resource.efs_dns}:/ #{new_resource.mount_dir}
+      fi
     EOH
   end
 end
